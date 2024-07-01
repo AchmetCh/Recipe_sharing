@@ -11,7 +11,8 @@ try {
 
 const CreateRecipe = async (req, res) => {
   try {
-    let newRecipe = new Model(req.body)
+    const {title, image, description, user} = req.body
+    let newRecipe = new Model({title, image, description, user})
   await Model.create(newRecipe)
   res.send('Recipe is create successfully')
   } catch (error) {
@@ -32,7 +33,18 @@ const deleteRecipe = async (req, res) => {
   }
 }
 
+const getUserRecipes = async(req,res) => {
+  try {
+    const userId = req.params.userId
+    const recipes = await Model.find({user: userId})
+    res.status(200).send(recipes)
+  } catch (error) {
+    console.error(`Error: ${error}`)
+    res.status(500).send(error)
+  }
+}
 
 
 
-module.exports = {getRecipes, CreateRecipe, deleteRecipe}
+
+module.exports = {getRecipes, CreateRecipe, deleteRecipe, getUserRecipes}

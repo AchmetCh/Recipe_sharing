@@ -1,22 +1,44 @@
 // RegisterForm.js
 
-import React, { useState } from 'react';
-import { Container, Form, Button } from 'react-bootstrap'; // Import necessary components from react-bootstrap
-import './styles.css'; // Import your CSS file for custom styles
+import React, { useState } from "react";
+import { Container, Form, Button } from "react-bootstrap"; // Import necessary components from react-bootstrap
+import "./styles.css"; // Import your CSS file for custom styles
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 const RegisterForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const apiUrl = "http://localhost:8000";
+  const ToastSuccessful = () => toast("Registered Successful!");
+  const ToastFailed = () => toast("Password and Confirmation not match");
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Handle form submission logic here (e.g., send data to backend)
-    console.log('Form submitted with:', email, password, confirmPassword);
+    if (password !== confirmPassword) {
+      ToastFailed();
+      return;
+    }
+    
+    const newUser = { email, password };
+    axios.post(`${apiUrl}/register`, newUser)
+      .then((response) => {
+        console.log(response.data);
+        ToastSuccessful();
+        setTimeout(() => navigate("/login"), 2000);
+      })
+      .catch((error) => console.log(error));
+    console.log("Form submitted with:", email, password, confirmPassword);
     // Clear form fields after submission
-    setEmail('');
-    setPassword('');
-    setConfirmPassword('');
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+    ToastSuccessful();
+    setTimeout(() => navigate("/"), 2000);
   };
 
   return (
@@ -60,6 +82,7 @@ const RegisterForm = () => {
           Register
         </Button>
       </Form>
+      <ToastContainer />
     </Container>
   );
 };

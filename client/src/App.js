@@ -2,28 +2,28 @@
 
 import React from 'react';
 
-import Layout from './Layout'; // Import Layout component
-import RecipeList from './RecipeList'; // Import RecipeList component
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Import BrowserRouter and Route
+import Layout from './Layout'; 
+import RecipeList from './RecipeList'; 
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; 
 import RecipeForm from './RecipeForm';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
+import DeleteRecipe from './DeleteRecipe';
 
 function App() {
   return (
     <Router>
       <div className="App">
         <header className="App-header">
-          <h1>Recipe Sharing App</h1>
         </header>
         <main>
-          <Layout className='d-flex'> {/* Render Layout component */}
+          <Layout className='d-flex'>
             <Routes>
               <Route path="/" element={<RecipeList />} />
               <Route path="/new" element={<RecipeForm />} />
               <Route path="/login" element={<LoginForm />} />
               <Route path="/register" element={<RegisterForm />} />
-              {/* Define other routes and components here */}
+              <Route path="/delete" element={<DeleteRecipe />} />
             </Routes>
           </Layout>
         </main>

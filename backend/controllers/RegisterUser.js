@@ -1,10 +1,14 @@
 const bcrypt = require("bcrypt");
-const User = require('../models/User');
+const User = require("../models/User");
 require("dotenv").config();
 const SALT_ROUNDS = +process.env.SALT_ROUNDS;
 
-const registerUser = (req, res) => {
+const registerUser = async (req, res) => {
   try {
+    const findUser = await User.findOne({req.body.email})
+    if (findUser) {
+      return res.status(400).json({ message: "User already exists" });
+    } 
     bcrypt.hash(req.body.password, SALT_ROUNDS).then((hashedPassword) => {
       const user = new User({
         email: req.body.email,
@@ -33,4 +37,4 @@ const registerUser = (req, res) => {
   }
 };
 
-module.exports = registerUser
+module.exports = registerUser;

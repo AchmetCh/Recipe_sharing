@@ -15,29 +15,29 @@ const RecipeList = () => {
     axios.get(`${apiUrl}/allRecipes`)
       .then(response => setRecipes(response.data))
       .catch(error => console.error('Error fetching recipes:', error));
-  }, []);
+  }, [recipes]);
 
   return (
     <div >
        <h2 className="mt-4">Recipes</h2>
-      <Container className='d-flex gap-5'>
+      <Container className='d-flex flex-wrap gap-2'>
        
         {recipes.map(recipe => (
-          <div className="card mt-4 d-flex justify-content-center " key={recipe._id}>
+          <div className="myCard card mt-2 d-flex justify-content-center " key={recipe._id}>
             <img src={recipe.image} alt={recipe.title} />
-            <h3>{recipe.title}</h3>
+            <h3 className='fs-3'>{recipe.title}</h3>
             <ShowMoreText
-              lines={3}
+              lines={1}
               more="Show more"
               less="Show less"
-              className="recipe-description"
+              className="recipe-description fs-4 wrapper-class-2 showMore"
               anchorClass="show-more-link"
+             
               expanded={false}
-              width={400}
+              width={800}
             >
               {recipe.description}
             </ShowMoreText>
-            
           </div>
         ))}
       </Container>

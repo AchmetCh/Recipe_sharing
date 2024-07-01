@@ -26,4 +26,14 @@
     border-radius: 8px;
     margin-top: 12px;
   }
-  
+  .show-more-link:hover {
+    cursor: pointer;
+  }
+  .show-more-link {
+    font-weight: bold;
+  }
+
+  .myCard {
+    width: 600px;
+    align-items: center;
+  }
