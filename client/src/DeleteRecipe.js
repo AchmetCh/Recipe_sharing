@@ -1,34 +1,46 @@
-// RecipeList.js
-
-import React, { useEffect, useId, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ShowMoreText from "react-show-more-text";
 import { Container } from "react-bootstrap";
 import "./styles.css";
+import {jwtDecode} from "jwt-decode";
 
 const DeleteRecipe = () => {
   const [recipes, setRecipes] = useState([]);
   const apiUrl = "http://localhost:8000";
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const userId = user?.id;
+    const fetchRecipes = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const decodedToken = jwtDecode(token);
+          const userId = decodedToken.id;
+          console.log('decodeToken ' + userId);
+          const response = await axios.get(`${apiUrl}/allRecipes/${userId}`);
+          console.log(response.data);
+          setRecipes(response.data);
+        } catch (error) {
+          console.error("Error decoding token:", error);
+        }
+      } else {
+        console.log("No token found");
+      }
+    };
     
-    if (userId) {
-      axios
-        .get(`${apiUrl}/allRecipes/${userId}`)
-        .then((response) => setRecipes(response.data))
-        .catch((error) => console.error("Error fetching recipes:", error));
-    } else {
-      console.log("No user found");
-    }
+    fetchRecipes();
+  }, []); // Empty dependency array to run only once on mount
+
+  useEffect(() => {
+    // This effect runs every time the `recipes` array is updated
+    console.log("Recipes updated", recipes);
   }, [recipes]);
 
   const deleteRecipe = (id) => {
     axios
       .delete(`${apiUrl}/delete/${id}`)
       .then(() => {
-        setRecipes(recipes.filter((recipe) => recipe.id !== id));
+        setRecipes((prevRecipes) => prevRecipes.filter((recipe) => recipe._id !== id));
       })
       .catch((error) => console.log("Error deleting recipe:", error));
   };

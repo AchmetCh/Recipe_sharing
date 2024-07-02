@@ -5,9 +5,10 @@ const SALT_ROUNDS = +process.env.SALT_ROUNDS;
 
 const registerUser = async (req, res) => {
   try {
-    const findUser = await User.findOne({req.body.email})
+    const findUser = await User.findOne({ email: req.body.email });
     if (findUser) {
-      return res.status(400).json({ message: "User already exists" });
+      console.log('user already exist');
+      return res.status(400).send({ message: "User already exists" });
     } 
     bcrypt.hash(req.body.password, SALT_ROUNDS).then((hashedPassword) => {
       const user = new User({

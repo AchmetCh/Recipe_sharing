@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 const ToastSuccessful = () => toast("Login Successful!");
 const ToastFailed = () => toast("Login Failed! Please try again.");
 const LoginForm = () => {
@@ -23,7 +24,7 @@ const LoginForm = () => {
         console.log(response.status)
         if (response.status === 200) {
         localStorage.setItem('token', JSON.stringify(response.data.token));
-        localStorage.setItem('user', JSON.stringify(response.data.user));
+        // localStorage.setItem('user', JSON.stringify(response.data.user));
         console.log('Login successful:', response.data);
         ToastSuccessful();
         setTimeout(() => navigate('/'), 2000); 

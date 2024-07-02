@@ -15,30 +15,36 @@ const RegisterForm = () => {
   const apiUrl = "http://localhost:8000";
   const ToastSuccessful = () => toast("Registered Successful!");
   const ToastFailed = () => toast("Password and Confirmation not match");
+  const ToastALreadyExist = () => toast("Users already exist try to login");
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (password !== confirmPassword) {
       ToastFailed();
       return;
     }
-    
+
     const newUser = { email, password };
-    axios.post(`${apiUrl}/register`, newUser)
-      .then((response) => {
-        console.log(response.data);
+    try {
+      const response = await axios.post(`${apiUrl}/register`, newUser);
+      console.log(response.status);
+      if (response.status === 201) {
+        ToastSuccessful();
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
         ToastSuccessful();
         setTimeout(() => navigate("/login"), 2000);
-      })
-      .catch((error) => console.log(error));
-    console.log("Form submitted with:", email, password, confirmPassword);
-    // Clear form fields after submission
-    setEmail("");
-    setPassword("");
-    setConfirmPassword("");
-    ToastSuccessful();
-    setTimeout(() => navigate("/"), 2000);
+        // Clear form fields after submission
+      }
+    } catch (error) {
+      if (error.response.status !== 201) {
+        ToastALreadyExist();
+      } else {
+        console.log("Form submitted with:", email, password, confirmPassword);
+      }
+    }
   };
 
   return (
